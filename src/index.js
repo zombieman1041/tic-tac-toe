@@ -1,4 +1,5 @@
 import { waitForElementToBeRemoved } from '@testing-library/react';
+import { isLabelWithInternallyDisabledControl } from '@testing-library/user-event/dist/utils';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
@@ -6,7 +7,8 @@ import './index.css';
 // Returns a  clickable square
 function Square(props) {
   return (
-    <button className={"square"} onClick={props.onClick}>
+    // If a square is part of the winning line change the classname
+    <button className={"square" + (props.isWinning ? "--winning" : "")} onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -14,36 +16,42 @@ function Square(props) {
   
   class Board extends React.Component {
 
-    // Renders a  clickable square
+    // Renders a clickable square with a unique identity
     renderSquare(i) {
       return (
         <Square 
+          isWinning={this.props.winningSquares.includes(i)}
+          key={"square" + i}
           value={this.props.squares[i]}
           onClick={() => this.props.onClick(i)}
           />
       );
+    }
+
+    // Renders 3 squares
+    renderSquares(n){
+      let squares = [];
+      for(let i = n; i < n + 3; i++){
+        squares.push(this.renderSquare(i));
+      }
+      return squares;
+    }
+
+    // Renders a row of at least 3 squares
+    renderRows(i) {
+      return <div className="board-row">
+        {this.renderSquares(i)}
+      </div>;
     }
     
     // Renders the tic tac toe board
     render() {
       return (
         <div>
-          <div className="board-row">
-            {this.renderSquare(0)}
-            {this.renderSquare(1)}
-            {this.renderSquare(2)}
+          {this.renderRows(0)}
+          {this.renderRows(3)}
+          {this.renderRows(6)}
           </div>
-          <div className="board-row">
-            {this.renderSquare(3)}
-            {this.renderSquare(4)}
-            {this.renderSquare(5)}
-          </div>
-          <div className="board-row">
-            {this.renderSquare(6)}
-            {this.renderSquare(7)}
-            {this.renderSquare(8)}
-          </div>
-        </div>
       );
     }
   }
@@ -58,13 +66,12 @@ function Square(props) {
         }],
         stepNumber: 0,
         xIsNext: true,
-        selectedMove: null,
+        isDecending: true
       };
     }
 
-    // game handles the square that was clicked and updates its value
+    // game handles the square that was clicked, checks for a winner, updates its value and whos turn it is, and stores the game state
     handleClick(i){
-
       const locations = [
         [1,1],
         [2,1],
@@ -88,13 +95,14 @@ function Square(props) {
       this.setState({
         history: history.concat([{
           squares: squares,
-          location: locations[i]
+          location: locations[i],
         }]),
         stepNumber: history.length,
         xIsNext: !this.state.xIsNext,
       });
     }
 
+    // Jumps to a previous move made 
     jumpTo(step) {
       this.setState({
         stepNumber: step,
@@ -103,19 +111,28 @@ function Square(props) {
       });
     }
 
+    sortHistory(){
+      this.setState({
+        isDecending: !this.state.isDecending
+      })
+    }
+
     render() {
       const history = this.state.history;
       const current = history[this.state.stepNumber];
       const winner = calculateWinner(current.squares);
 
+      // game renders the move list that can jump through time
       const moves = history.map((step, move) => {
         const desc = move ?
           'Go to move # ' + move + ' @ ' + history[move].location :
           'Go to game start';
         return (
           <li key={move}>
-            <button className={move === this.state.selectedMove ? 'selectedMove' : 'button'} 
-              onClick={() => this.jumpTo(move)}>{desc}
+            {/* bolds the current move in the list */}
+            <button className={move === this.state.stepNumber ? 'selectedMove' : 'button'} 
+              onClick={() => this.jumpTo(move)}>
+              {desc}
             </button>
           </li>
         );
@@ -124,8 +141,10 @@ function Square(props) {
       // game renders the game status
       let status;
       if(winner){
-        status = 'Winner: ' + winner;
-      } else{
+        status = 'Winner: ' + (!this.state.xIsNext ? 'X!' : 'O!');
+      } else if(!current.squares.includes(null)){
+        status = "Draw!";
+      }else{
         status = 'Next player: ' + (this.state.xIsNext ? 'X' : 'O');
       }
 
@@ -134,13 +153,18 @@ function Square(props) {
         <div className="game">
           <div className="game-board">
             <Board 
+              winningSquares={winner ? winner.line : []}
               squares={current.squares}
               onClick={(i) => this.handleClick(i)}
             />
           </div>
           <div className="game-info">
             <div>{status}</div>
-            <ol>{moves}</ol>
+            <ol>{this.state.isDecending ? moves : moves.reverse()}</ol>
+            <button onClick={() => this.sortHistory()}>
+              Sort by: {this.state.isDecending ? "Descending" : "Ascending"}
+            </button>
+            
           </div>
         </div>
       );
@@ -169,7 +193,7 @@ function Square(props) {
     for (let i=0; i<lines.length; i++){
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a];
+        return {player: squares[a], line: [a, b, c]};
       }
     }
     return null;
