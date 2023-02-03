@@ -3,6 +3,10 @@ import { isLabelWithInternallyDisabledControl } from '@testing-library/user-even
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+// import Container from 'react-bootstrap/Container';
+// import Row from 'react-bootstrap/Row';
+// import Col from 'react-bootstrap/Col';
+
 
 // Returns a  clickable square
 function Square(props) {
@@ -150,22 +154,29 @@ function Square(props) {
 
       // game returns the structure of tic tac toe
       return (
-        <div className="game">
-          <div className="game-board">
-            <Board 
-              winningSquares={winner ? winner.line : []}
-              squares={current.squares}
-              onClick={(i) => this.handleClick(i)}
-            />
+        <div className="container">
+          <div className='title'>
+          Tic Tac Toe using React
           </div>
-          <div className="game-info">
-            <div>{status}</div>
-            <ol>{this.state.isDecending ? moves : moves.reverse()}</ol>
-            <button onClick={() => this.sortHistory()}>
-              Sort by: {this.state.isDecending ? "Descending" : "Ascending"}
-            </button>
-            
+          <div className='game'>
+            <div className="game-board">
+              <Board 
+                winningSquares={winner ? winner.line : []}
+                squares={current.squares}
+                onClick={(i) => this.handleClick(i)}
+              />
+            </div>
+            <div className="game-info">
+              <div>{status}</div>
+              <ol>{this.state.isDecending ? moves : moves.reverse()}</ol>
+              <button onClick={() => this.sortHistory()}>
+                Sort by: {this.state.isDecending ? "Descending" : "Ascending"}
+              </button>
+              
+            </div>
           </div>
+
+
         </div>
       );
     }
@@ -175,6 +186,7 @@ function Square(props) {
   
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(<Game />);
+
   
   function calculateWinner(squares) {
 
