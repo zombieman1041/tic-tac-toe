@@ -1,6 +1,7 @@
 body {
-    font: 14px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
+  font-size: 18px;
+  margin: 20px;
+  background-color: #010a01;
   }
   
   ol, ul {
@@ -18,31 +19,69 @@ body {
   }
   
   .square {
-    background: #fff;
-    border: 1px solid #999;
+    /* background: #fff; */
+    border: 0.2rem solid #fff;
     float: left;
     font-size: 24px;
+    color: white;
     font-weight: bold;
     line-height: 34px;
-    height: 34px;
+    height: 100px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 34px;
+    width: 100px;
+    background-color: #010a01;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #bc13fe,
+    0 0 0.8rem #bc13fe,
+    0 0 2.8rem #bc13fe,
+    inset 0 0 1.3rem #bc13fe;
   }
   
   .square:focus {
     outline: none;
   }
   
-  .kbd-navigation .square:focus {
+  /* .kbd-navigation .square:focus {
     background: #ddd;
-  }
+  } */
   
   .title{
     display: flex;
     justify-content: center;
+    font-size: 50px;
+    color: #fff;
+    animation: flicker 0.11s ease-in-out infinite alternate;    
+  }
+
+  @keyframes flicker {
+    100% {
+      /* Larger blur radius */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 11px #fff,
+        0 0 19px #fff,
+        0 0 40px #f08,
+        0 0 80px #f08,
+        0 0 90px #f08,
+        0 0 100px #f08,
+        0 0 150px #f08;
+    }
+   0% {
+      /* A slightly smaller blur radius */
+      text-shadow:
+        0 0 4px #fff,
+        0 0 10px #fff,
+        0 0 18px #fff,
+        0 0 38px #f08,
+        0 0 73px #f08,
+        0 0 80px #f08,
+        0 0 94px #f08,
+        0 0 140px #f08;
+    }
   }
 
   .game {
@@ -52,9 +91,7 @@ body {
     margin-top: 50px;
   }
   
-  .game-info {
-    margin-left: 20px;
-  }
+
   .parent{
     display: flex;
   }
@@ -65,20 +102,28 @@ body {
     font-weight: bold;
   }
   .square--winning{
-    background: #fff;
-    border: 1px solid #999;
+    /* background: #fff; */
+    border: 0.2rem solid #fff;
     float: left;
-    font-size: 24px;
+    font-size: 34px;
+    color: yellow;
     font-weight: bold;
     line-height: 34px;
-    height: 34px;
+    height: 100px;
     margin-right: -1px;
     margin-top: -1px;
     padding: 0;
     text-align: center;
-    width: 34px;
-    background-color: yellow;
+    width: 100px;
+    background-color: #010a01;
+    box-shadow: 0 0 .2rem #fff,
+    0 0 .2rem #fff,
+    0 0 2rem #bc13fe,
+    0 0 0.8rem #bc13fe,
+    0 0 2.8rem #bc13fe,
+    inset 0 0 1.3rem #bc13fe;  
   }
+
   .container{
     display: flex;
     flex-direction: column;

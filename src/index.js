@@ -3,6 +3,7 @@ import { isLabelWithInternallyDisabledControl } from '@testing-library/user-even
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
+import styled from 'styled-components';
 // import Container from 'react-bootstrap/Container';
 // import Row from 'react-bootstrap/Row';
 // import Col from 'react-bootstrap/Col';
@@ -155,9 +156,10 @@ function Square(props) {
       // game returns the structure of tic tac toe
       return (
         <div className="container">
-          <div className='title'>
-          Tic Tac Toe using React
-          </div>
+        
+          <Title className='title'>
+          Tic-Tac-Toe using React
+          </Title>
           <div className='game'>
             <div className="game-board">
               <Board 
@@ -166,14 +168,14 @@ function Square(props) {
                 onClick={(i) => this.handleClick(i)}
               />
             </div>
-            <div className="game-info">
+            <Info className="game-info">
               <div>{status}</div>
               <ol>{this.state.isDecending ? moves : moves.reverse()}</ol>
               <button onClick={() => this.sortHistory()}>
                 Sort by: {this.state.isDecending ? "Descending" : "Ascending"}
               </button>
               
-            </div>
+            </Info>
           </div>
 
 
@@ -187,7 +189,24 @@ function Square(props) {
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(<Game />);
 
-  
+  const Title = styled.h1`
+    font-family: 'Vibur', sans-serif;
+  `;
+  const Info = styled.h4`
+    font-family: 'Arial', sans-serif;
+    margin-left: 20px;
+    color: #fff;
+    /* text-shadow:
+    0 0 7px #fff,
+    0 0 10px #fff,
+    0 0 21px #fff,
+    0 0 42px #0fa,
+    0 0 82px #0fa,
+    0 0 92px #0fa,
+    0 0 102px #0fa,
+    0 0 151px #0fa; */
+  `;
+
   function calculateWinner(squares) {
 
     // winning lines
